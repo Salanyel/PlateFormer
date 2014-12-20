@@ -1,8 +1,10 @@
 #pragma once
 #include <iostream>
+#include <stdio.h>
 #include "State_Game_Base.h"
 #include "GraphicsEngine.h"
 #include "PhysicsEngine.h"
+#include "CXBOXController.h"
 
 using namespace sf;
 
@@ -20,10 +22,10 @@ public:
 	virtual void processEvents();
 
 	GraphicsEngine * getGraphics();
-	PhysicsEngine * getPhysics();
 
 protected :
 	GraphicsEngine * m_graphics;
-	PhysicsEngine * m_physics;
+	CXBOXController * m_player;
+	int m_menuFocused = 0;
 };
 

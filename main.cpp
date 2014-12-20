@@ -6,7 +6,8 @@ using namespace std;
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(200, 200), "PlateFormer");
+	sf::RenderWindow window(sf::VideoMode(800, 600), "PlateFormer");
+	window.setFramerateLimit(60);
 	
 	StateMachine_Game gameMachine(&window);
 	cout << "GameMachine created" << endl;
@@ -23,8 +24,11 @@ int main()
 	{
 		while (window.pollEvent(event))
 		{
-			if (event.type == Event::Closed)
-				window.close();
+			gameMachine.getCurrentState()->processEvents(event);
 		}
+
+		gameMachine.getCurrentState()->processEvents();
+
+		gameMachine.operate();
 	}
 }
