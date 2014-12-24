@@ -9,6 +9,7 @@ class State_Game_Base
 public:
 	State_Game_Base(RenderWindow * window);
 	~State_Game_Base();
+	virtual int getStateStatus() = 0;
 
 	virtual bool initState(RenderWindow * window) = 0;
 	virtual bool clearState() = 0;

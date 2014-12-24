@@ -12,6 +12,7 @@ GraphicsEngine::GraphicsEngine(RenderWindow * window)
 GraphicsEngine::~GraphicsEngine()
 {
 	emptyObjects();
+	delete(m_map);
 }
 
 void GraphicsEngine::setCurrentState(GRAPHIC_STATES newState)
@@ -23,6 +24,11 @@ void GraphicsEngine::setWindow(RenderWindow * window)
 {
 	m_window = window;
 	m_window->setView(m_view);
+}
+
+void GraphicsEngine::setMap(Map * map)
+{
+	m_map = map;
 }
 
 bool GraphicsEngine::loadRessource()
@@ -40,16 +46,27 @@ bool GraphicsEngine::loadRessource()
 
 bool GraphicsEngine::loadFont()
 {
-	Font font;
-	if (!font.loadFromFile("./Assets/Fonts/Blackhead.otf"))
-	{
-		cout << "Error during the loading of the fonts" << endl;
-		return false;
-	}
+	Font * font = new Font();
 
-	cout << "Fonts successfully loaded" << endl;
-	m_fonts.push_back(font);
-	return true;
+	switch (m_currentState)
+	{
+	case MENU_GRAPHICS:
+		if (!font->loadFromFile("./Assets/Fonts/Blackhead.otf"))
+		{
+			cout << "Error during the loading of the fonts" << endl;
+			return false;
+		}
+
+		cout << "Fonts successfully loaded" << endl;
+		m_fonts.push_back(*font);
+		return true;
+
+	case GAME_GRAPHICS:
+		return true;
+
+	default:
+		return false;
+	}	
 }
 
 void GraphicsEngine::emptyObjects()
@@ -60,25 +77,45 @@ void GraphicsEngine::emptyObjects()
 
 bool GraphicsEngine::loadTexture()
 {
-	Texture text1, text2;
+	Texture * text = new Texture();
 
-	if (!text1.loadFromFile("./Assets/Images/menu.jpg"))
+	switch (m_currentState)
 	{
-		cout << "Error during the loading of the textures (menu.jpg)" << endl;
+	case MENU_GRAPHICS:		
+
+		if (!text->loadFromFile("./Assets/Images/menu.jpg"))
+		{
+			cout << "Error during the loading of the textures (menu.jpg)" << endl;
+			return false;
+		}
+
+		m_textures.push_back(*text);
+
+		if (!text->loadFromFile("./Assets/Images/arrow.png"))
+		{
+			cout << "Error during the loading of the textures (arrow.png)" << endl;
+			return false;
+		}
+		
+		m_textures.push_back(*text);
+
+		cout << "Texture successfully loaded" << endl;
+		return true;
+
+	case GAME_GRAPHICS:
+		if (!text->loadFromFile("./Assets/Images/sheet_character.png"))
+		{
+			cout << "Error during the loading of the textures (sheet_character.png)" << endl;
+			return false;
+		}
+
+		m_textures.push_back(*text);
+		return true;
+
+	default:
 		return false;
 	}
-
-	if (!text2.loadFromFile("./Assets/Images/arrow.png"))
-	{
-		cout << "Error during the loading of the textures (arrow.png)" << endl;
-		return false;
-	}
-
-	m_textures.push_back(text1);
-	m_textures.push_back(text2);
-
-	cout << "Texture successfully loaded" << endl;
-	return true;	
+		
 }
 
 void GraphicsEngine::initTexts()

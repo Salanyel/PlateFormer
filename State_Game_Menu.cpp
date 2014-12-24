@@ -13,6 +13,11 @@ State_Game_Menu::~State_Game_Menu()
 {
 }
 
+int State_Game_Menu::getStateStatus()
+{
+	return STATE_CHANGE;
+}
+
 bool State_Game_Menu::initState(RenderWindow * window)
 {
 	cout << "Initialising game state : MENU" << endl;
@@ -33,6 +38,7 @@ bool State_Game_Menu::initState(RenderWindow * window)
 bool State_Game_Menu::clearState()
 {
 	delete(m_graphics);
+	delete(m_player);
 
 	return true;
 }
@@ -59,7 +65,7 @@ void State_Game_Menu::processEvents(Event event)
 		if (m_menuFocused == 1)
 			m_window->close();
 		else
-			cout << "Launch the game" << endl;
+			STATE_CHANGE = 1;
 	}		
 
 	if (event.type == Event::KeyPressed && event.key.code == Keyboard::Up || state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP || magnitude > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE && ly > 0)

@@ -9,12 +9,12 @@
 
 using namespace sf;
 
-class State_Game_Menu :
+class State_Game_Game :
 	public State_Game_Base
 {
 public:
-	State_Game_Menu(RenderWindow * window);
-	~State_Game_Menu();
+	State_Game_Game(RenderWindow * window);
+	~State_Game_Game();
 	virtual int getStateStatus();
 
 	virtual bool initState(RenderWindow * window);
@@ -24,11 +24,11 @@ public:
 	virtual void processEvents();
 
 	GraphicsEngine * getGraphics();
+	PhysicsEngine * getPhysics();
 
-protected :
+protected:
 	GraphicsEngine * m_graphics;
+	PhysicsEngine * m_physics;
 	CXBOXController * m_player;
-	int m_menuFocused = 0;
 	int STATE_CHANGE = 0;
 };
-

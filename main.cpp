@@ -8,10 +8,12 @@ int main()
 {
 	sf::RenderWindow window(sf::VideoMode(800, 600), "PlateFormer");
 	window.setFramerateLimit(60);
-	
+
 	StateMachine_Game gameMachine(&window);
 	cout << "GameMachine created" << endl;
-	if (gameMachine.changeState(GAME_STATES::MENU))
+
+	if (gameMachine.changeState(GAME_STATES::GAME))
+	//if (gameMachine.changeState(GAME_STATES::MENU))
 	{
 		cout << "State initalized" << endl;
 	} else {
@@ -28,7 +30,12 @@ int main()
 		}
 
 		gameMachine.getCurrentState()->processEvents();
+		
+		if (!gameMachine.operate())
+		{
+			cout << "Error during the operate of the stateMachine" << endl;
+			return EXIT_FAILURE;
+		}
 
-		gameMachine.operate();
 	}
 }

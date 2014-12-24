@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML\Graphics.hpp>
+#include "Map.h"
 #include <iostream>
 #include <vector>
 
@@ -20,6 +21,7 @@ public:
 
 	void setCurrentState(GRAPHIC_STATES newState);
 	void setWindow(RenderWindow * window);
+	void setMap(Map * map);
 	bool loadRessource();
 	bool loadFont();
 	bool loadTexture();
@@ -38,6 +40,7 @@ protected:
 	vector<Font> m_fonts;
 	vector<Texture> m_textures;
 	View m_view;
+	Map * m_map;
 
 	// Sprites
 	vector<Text *> m_texts;
