@@ -61,7 +61,9 @@ void State_Game_Game::operate()
 
 void State_Game_Game::processEvents(Event event)
 {
-
+	XINPUT_STATE state = m_player->GetState();
+	if (event.type == Event::Closed || event.type == Event::KeyPressed && event.key.code == Keyboard::Escape || (state.Gamepad.wButtons & XINPUT_GAMEPAD_BACK))
+		m_window->close();
 }
 
 void State_Game_Game::processEvents()

@@ -12,8 +12,8 @@ int main()
 	StateMachine_Game gameMachine(&window);
 	cout << "GameMachine created" << endl;
 
-	if (gameMachine.changeState(GAME_STATES::GAME))
-	//if (gameMachine.changeState(GAME_STATES::MENU))
+	//if (gameMachine.changeState(GAME_STATES::GAME))
+	if (gameMachine.changeState(GAME_STATES::MENU))
 	{
 		cout << "State initalized" << endl;
 	} else {

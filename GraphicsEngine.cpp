@@ -2,10 +2,9 @@
 
 GraphicsEngine::GraphicsEngine(RenderWindow * window)
 {
-	m_window = window;
+	m_window = window;	
 	m_view.setCenter(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
-	m_view.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);	
-
+	m_view.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 	m_window->setView(m_view);
 }
 
@@ -18,6 +17,18 @@ GraphicsEngine::~GraphicsEngine()
 void GraphicsEngine::setCurrentState(GRAPHIC_STATES newState)
 {
 	m_currentState = newState;
+
+	switch (m_currentState)
+	{
+	case MENU_GRAPHICS:
+		m_view.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+
+	case GAME_GRAPHICS:
+		m_view.setSize(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
+
+	default:
+		break;
+	}
 }
 
 void GraphicsEngine::setWindow(RenderWindow * window)
@@ -110,6 +121,14 @@ bool GraphicsEngine::loadTexture()
 		}
 
 		m_textures.push_back(*text);
+
+		if (!text->loadFromFile("./Assets/Images/texture.png"))
+		{
+			cout << "Error during the loading of the textures (texture.png)" << endl;
+			return false;
+		}
+
+		m_textures.push_back(*text);
 		return true;
 
 	default:
@@ -176,11 +195,55 @@ void GraphicsEngine::initSprites()
 
 		m_sprites.push_back(sprite1);
 		m_sprites.push_back(sprite2);
+		break;
+
+	case GAME_GRAPHICS:
+		int it;		
+		int mapWidth;
+		mapWidth = m_map->getMapWidth();
+		TILE_TYPE type;
+		Sprite * sprite;
+
+		for (it = 0; it < m_map->getTileNumber(); ++it)
+		{
+			sprite = new Sprite();
+			sprite->setTexture(m_textures.at(1));			
+			type = m_map->getTile(it)->getType();
+
+			switch (type)
+			{
+			case T_EMPTY:
+				sprite->setTextureRect(IntRect(0, 0, 64, 64));
+				break;
+
+			case T_BLOCK:
+				sprite->setTextureRect(IntRect(65, 0, 64, 64));
+				break;
+
+			case T_MAPWALL:
+				sprite->setTextureRect(IntRect(129, 0, 64, 64));
+				break;
+
+			case T_SPAWN:
+				sprite->setTextureRect(IntRect(0, 0, 64, 64));
+				cout << "Center view : " << 64 * (it%mapWidth) + 32 << " x " <<  64 * (it / mapWidth) + 32 << endl;
+				m_view.setCenter(64 * (it%mapWidth) + 32, 64 * (it / mapWidth) + 32);
+				m_view.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+				m_window->setView(m_view);
+				break;
+
+			default:
+				break;
+			}
+
+			sprite->setPosition(64 * (it%mapWidth), 64 * (it/mapWidth));			
+			m_mapSprites.push_back(sprite);
+		}	
+		break;
 
 	default:
 		return;
 	}
-
 }
 
 void GraphicsEngine::setRessource()
@@ -242,6 +305,11 @@ void GraphicsEngine::draw()
 
 	m_window->clear();	
 
+	for (it = 0; it < m_mapSprites.size(); ++it)
+	{
+		m_window->draw(*m_mapSprites.at(it));
+	}
+
 	for (it = 0; it < m_sprites.size(); ++it)
 	{
 		m_window->draw(*m_sprites.at(it));
@@ -257,8 +325,5 @@ void GraphicsEngine::draw()
 
 void GraphicsEngine::display()
 {
-	//cout << m_fonts.size() << " fonts." << endl;
-	//cout << m_textures.size() << " textures" << endl;
-
 	m_window->display();
 }

@@ -45,6 +45,7 @@ protected:
 	// Sprites
 	vector<Text *> m_texts;
 	vector<Sprite *> m_sprites;	
+	vector<Sprite *> m_mapSprites;
 
 	int m_currentState;
 	const double SCREEN_WIDTH = 800;

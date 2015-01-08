@@ -12,13 +12,18 @@ Map::~Map()
 	delete(m_path);
 }
 
-/*Tile * Map::getTile(int x, int y)
+Tile * Map::getTile(int x, int y)
 {
+	int yPlace = y * m_mapHeight;
+	cout << "X : " << x << " / Y : " << y << " // Place : " << yPlace + x << endl;
+
+	return m_tiles.at(x + yPlace);
 }
+
 Tile * Map::getTile(int tileNumber)
 {
-
-}*/
+	return m_tiles.at(tileNumber);
+}
 
 int Map::getMapHeight()
 {
