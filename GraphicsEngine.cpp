@@ -42,6 +42,11 @@ void GraphicsEngine::setMap(Map * map)
 	m_map = map;
 }
 
+Sprite * GraphicsEngine::getCharacterImage()
+{
+	return m_characterSprites;
+}
+
 bool GraphicsEngine::loadRessource()
 {
 	bool ctrl1, ctrl2;
@@ -202,7 +207,11 @@ void GraphicsEngine::initSprites()
 		int mapWidth;
 		mapWidth = m_map->getMapWidth();
 		TILE_TYPE type;
-		Sprite * sprite;
+		Sprite * sprite;		
+		
+		m_characterSprites = new Sprite();
+		m_characterSprites->setTexture(m_textures.at(0));
+		m_characterSprites->setTextureRect(IntRect(28, 34, 83, 141));
 
 		for (it = 0; it < m_map->getTileNumber(); ++it)
 		{
@@ -225,8 +234,11 @@ void GraphicsEngine::initSprites()
 				break;
 
 			case T_SPAWN:
+				m_sens = 1;
 				sprite->setTextureRect(IntRect(0, 0, 64, 64));
-				cout << "Center view : " << 64 * (it%mapWidth) + 32 << " x " <<  64 * (it / mapWidth) + 32 << endl;
+				cout << "Center view : " << 64 * (it%mapWidth) + 32 << " x " <<  64 * (it / mapWidth) + 32 << endl;												
+				m_characterSprites->setPosition(Vector2f(64 * (it%mapWidth), 64 * (it / mapWidth)));
+				m_characterSprites->scale(0.46, 0.46);
 				m_view.setCenter(64 * (it%mapWidth) + 32, 64 * (it / mapWidth) + 32);
 				m_view.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 				m_window->setView(m_view);
@@ -234,10 +246,9 @@ void GraphicsEngine::initSprites()
 
 			default:
 				break;
-			}
-
+			}			
 			sprite->setPosition(64 * (it%mapWidth), 64 * (it/mapWidth));			
-			m_mapSprites.push_back(sprite);
+			m_mapSprites.push_back(sprite);			
 		}	
 		break;
 
@@ -280,6 +291,21 @@ void GraphicsEngine::setFocusSprite(float x)
 	}
 }
 
+void GraphicsEngine::moveCharacter(int x, int y)
+{
+	if (x > m_characterSprites->getGlobalBounds().left)
+	{	
+		m_characterSprites->setTextureRect(IntRect(154, 214, 122, 137));
+		m_sens = 1;
+	}
+	else
+	{
+		m_characterSprites->setTextureRect(IntRect(276, 214, -122, 141));
+		m_sens = -1;
+	}
+	m_characterSprites->setPosition(Vector2f(x, y));	
+}
+
 bool GraphicsEngine::collideText(double x, double y)
 {
 	int it;
@@ -320,7 +346,21 @@ void GraphicsEngine::draw()
 		m_window->draw(*m_texts.at(it));
 	}
 
-	display();
+	if (m_currentState == GAME_GRAPHICS)
+	{
+		m_window->draw(*m_characterSprites);
+		cout << m_sens << endl;
+		display();
+		if (m_sens == 1)
+		{
+			m_characterSprites->setTextureRect(IntRect(28, 34, 83, 141));
+		}
+		else {
+			m_characterSprites->setTextureRect(IntRect(111, 34, -83, 141));
+		}
+	}	
+	else
+		display();
 }
 
 void GraphicsEngine::display()

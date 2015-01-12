@@ -4,9 +4,8 @@ State_Game_Game::State_Game_Game(RenderWindow * window) : State_Game_Base(window
 {
 	m_player = new CXBOXController(1);
 	m_graphics = new GraphicsEngine(window);
-	m_physics = new PhysicsEngine(window);
+	m_physics = new PhysicsEngine(window, m_graphics);
 }
-
 
 State_Game_Game::~State_Game_Game()
 {
@@ -38,9 +37,10 @@ bool State_Game_Game::initState(RenderWindow * window)
 		return false;
 	}
 	m_graphics->setMap(m_physics->getMap());
-
 	m_graphics->initTexts();
 	m_graphics->initSprites();
+
+	m_physics->setCharacter();
 
 	return true;
 }
@@ -68,7 +68,15 @@ void State_Game_Game::processEvents(Event event)
 
 void State_Game_Game::processEvents()
 {
+	if (Keyboard::isKeyPressed(Keyboard::Right))
+	{
+		m_physics->operateCharacter(1, 0);
+	}
 
+	if (Keyboard::isKeyPressed(Keyboard::Left))
+	{
+		m_physics->operateCharacter(-1, 0);
+	}
 }
 
 GraphicsEngine * State_Game_Game::getGraphics()

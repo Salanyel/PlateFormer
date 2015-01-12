@@ -3,6 +3,7 @@
 #include "Map.h"
 #include <iostream>
 #include <vector>
+#include "CharacterImage.h"
 
 using namespace sf;
 using namespace std;
@@ -22,6 +23,7 @@ public:
 	void setCurrentState(GRAPHIC_STATES newState);
 	void setWindow(RenderWindow * window);
 	void setMap(Map * map);
+	Sprite * getCharacterImage();
 	bool loadRessource();
 	bool loadFont();
 	bool loadTexture();
@@ -31,6 +33,7 @@ public:
 	void setRessource();
 	void setFocusSprite(float x);
 
+	void moveCharacter(int x, int y);
 	bool collideText(double x, double y);
 	void draw();
 	void display();	
@@ -43,9 +46,12 @@ protected:
 	Map * m_map;
 
 	// Sprites
+	int m_playerSprite;
+	int m_sens;
 	vector<Text *> m_texts;
 	vector<Sprite *> m_sprites;	
 	vector<Sprite *> m_mapSprites;
+	Sprite * m_characterSprites;
 
 	int m_currentState;
 	const double SCREEN_WIDTH = 800;
