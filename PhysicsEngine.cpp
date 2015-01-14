@@ -22,6 +22,7 @@ void PhysicsEngine::setWindow(RenderWindow * window)
 
 void PhysicsEngine::setCharacter()
 {
+	Sprite * tmp = m_graphics->getCharacterImage();
 	m_character->setX(tmp->getGlobalBounds().left);
 	m_character->setY(tmp->getGlobalBounds().top);
 }

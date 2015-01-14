@@ -7,12 +7,6 @@
 using namespace sf;
 using namespace std;
 
-enum CHARACTER_STATES
-{
-	STAND,
-	RUN
-};
-
 class StateMachine_Character
 {
 public:

@@ -30,11 +30,6 @@ int Character::getY()
 	return m_y;
 }
 
-CharacterImage * Character::getCharacterImage()
-{
-	return m_image;
-}
-
 void Character::move(int x, int y)
 {
 	if (x == -1)
@@ -57,7 +52,7 @@ void Character::processEvents(Event event)
 
 void Character::processEvents()
 {
-	if (Keyboard::isKeyPressed(Keyboard::Right)
+	if (Keyboard::isKeyPressed(Keyboard::Right))
 	{
 		m_orientation = 1;
 	}

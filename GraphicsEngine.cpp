@@ -349,7 +349,6 @@ void GraphicsEngine::draw()
 	if (m_currentState == GAME_GRAPHICS)
 	{
 		m_window->draw(*m_characterSprites);
-		cout << m_sens << endl;
 		display();
 		if (m_sens == 1)
 		{
