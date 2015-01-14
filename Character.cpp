@@ -3,6 +3,7 @@
 
 Character::Character()
 {
+	m_orientation = 1;
 }
 
 Character::~Character()
@@ -47,4 +48,22 @@ void Character::move(int x, int y)
 
 	if (y == 1)
 		m_y += JUMP_VELOCITY;
+}
+
+void Character::processEvents(Event event)
+{
+
+}
+
+void Character::processEvents()
+{
+	if (Keyboard::isKeyPressed(Keyboard::Right)
+	{
+		m_orientation = 1;
+	}
+
+	if (Keyboard::isKeyPressed(Keyboard::Left))
+	{
+		m_orientation = -1;		
+	}
 }

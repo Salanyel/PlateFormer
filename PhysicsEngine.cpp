@@ -22,16 +22,14 @@ void PhysicsEngine::setWindow(RenderWindow * window)
 
 void PhysicsEngine::setCharacter()
 {
-	Sprite * tmp = m_graphics->getCharacterImage();
-	m_characters.at(0)->setX(tmp->getGlobalBounds().left);
-	m_characters.at(0)->setY(tmp->getGlobalBounds().top);
+	m_character->setX(tmp->getGlobalBounds().left);
+	m_character->setY(tmp->getGlobalBounds().top);
 }
 
 void PhysicsEngine::operateCharacter(int x, int y)
 {
-	Character * character = m_characters.at(0);
-	character->move(x, y);
-	m_graphics->moveCharacter(character->getX(), character->getY());
+	m_character->move(x, y);
+	m_graphics->moveCharacter(m_character->getX(), m_character->getY());
 }
 
 bool PhysicsEngine::initEngine()
@@ -39,9 +37,7 @@ bool PhysicsEngine::initEngine()
 	switch (m_currentState)
 	{
 	case GAME_PHYSICS:
-		Character * player;
-		player = new Character();
-		m_characters.push_back(player);
+		m_character = new Character();		
 
 		if (!m_map->loadMap())
 			return false;
@@ -53,6 +49,11 @@ bool PhysicsEngine::initEngine()
 	}
 
 	return true;
+}
+
+Character * PhysicsEngine::getCharacter()
+{
+	return m_character;
 }
 
 Map * PhysicsEngine::getMap()

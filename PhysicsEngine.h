@@ -28,6 +28,7 @@ public:
 	void operateCharacter(int x, int y);
 	bool initEngine();
 
+	Character * getCharacter();
 	Map * getMap();
 
 protected:
@@ -36,6 +37,6 @@ protected:
 	Map * m_map;
 	PHYSIC_STATES m_currentState;
 
-	vector<Character *> m_characters;
+	Character * m_character;
 };
 

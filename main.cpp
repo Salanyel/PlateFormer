@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "StateMachine_Game.h"
+#include <pugixml.cpp>
 
 using namespace std;
 
