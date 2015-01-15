@@ -6,7 +6,6 @@ Map::Map(char_t * path)
 	m_path = path;
 }
 
-
 Map::~Map()
 {
 	delete(m_path);

@@ -7,7 +7,8 @@ using namespace std;
 using namespace sf;
 
 #define MOVE_VELOCITY 4;
-#define JUMP_VELOCITY 10;
+#define JUMP_VELOCITY 6;
+#define FALL_VELOCITY 6;
 
 class Character
 {
@@ -20,6 +21,7 @@ public:
 	int getX();
 	int getY();
 	void move();
+	void jumpControl();
 	void processEvents(Event event);
 	void processEvents();
 	StateMachine_Character * getStateMachine();
@@ -30,5 +32,6 @@ protected :
 	int m_y;
 	int m_orientation;
 	int m_jump;
+	int m_jumpMax;
 	StateMachine_Character * m_stateMachine;
 };

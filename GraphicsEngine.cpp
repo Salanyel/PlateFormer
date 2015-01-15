@@ -215,6 +215,8 @@ void GraphicsEngine::initSprites()
 
 		for (it = 0; it < m_map->getTileNumber(); ++it)
 		{
+			if (it == 63)
+				cout << "temp" << endl;
 			sprite = new Sprite();
 			sprite->setTexture(m_textures.at(1));			
 			type = m_map->getTile(it)->getType();
@@ -297,39 +299,49 @@ void GraphicsEngine::syncCharacter(int x, int y, int state, int orientation)
 	int left;
 	switch (state)
 	{
-	case CHARACTER_STATES::STAND :
+	case STAND :
 		if (orientation == 1)
 		{
-			m_characterSprites->setTextureRect(IntRect(28, 36, orientation * 83, 139));
+			m_characterSprites->setTextureRect(IntRect(28, 36, orientation * 83, 137));
 		}
 		else
 		{
-			m_characterSprites->setTextureRect(IntRect(111, 36, orientation * 83, 139));
+			m_characterSprites->setTextureRect(IntRect(111, 36, orientation * 83, 137));
 		}
 		break;
 
-	case CHARACTER_STATES::RUN:
+	case RUN:
 		if (orientation == 1)
 		{
 			m_characterSprites->setTextureRect(IntRect(154, 214, orientation * 122, 137));
 		}
 		else
 		{
-			m_characterSprites->setTextureRect(IntRect(276, 214, orientation * 122, 141));
+			m_characterSprites->setTextureRect(IntRect(276, 214, orientation * 122, 137));
 		}
 		break;
 
-	case CHARACTER_STATES::JUMP :
+	case JUMP :
+		if (orientation == 1)
+		{
+			m_characterSprites->setTextureRect(IntRect(492, 875, orientation * 105, 137));
+		}
+		else
+		{
+			m_characterSprites->setTextureRect(IntRect(597, 875, orientation * 105, 137));
+		}
+		break;
+			
+	case FLY :
 		if (orientation == 1)
 		{
 			m_characterSprites->setTextureRect(IntRect(1223, 373, orientation * 101, 137));
 		}
 		else
 		{
-			m_characterSprites->setTextureRect(IntRect(1324, 373, orientation * 101, 141));
+			m_characterSprites->setTextureRect(IntRect(1324, 373, orientation * 101, 137));
 		}
 		break;
-			
 	
 	default:
 		break;
@@ -337,22 +349,6 @@ void GraphicsEngine::syncCharacter(int x, int y, int state, int orientation)
 
 	m_characterSprites->setPosition(Vector2f(x, y));	
 }
-/*
-void GraphicsEngine::syncCharacter(int x, int y, int orientation)
-{
-	int top;
-	int left;
-	if (orientation == 1)
-	{
-		m_characterSprites->setTextureRect(IntRect(154, 214, orientation * 122, 137));
-	}
-	else
-	{
-		m_characterSprites->setTextureRect(IntRect(276, 214, orientation * 122, 141));
-	}
-
-	m_characterSprites->setPosition(Vector2f(x, y));
-}*/
 
 bool GraphicsEngine::collideText(double x, double y)
 {
@@ -398,13 +394,8 @@ void GraphicsEngine::draw()
 	{
 		m_window->draw(*m_characterSprites);
 		display();
-		if (m_sens == 1)
-		{
-			m_characterSprites->setTextureRect(IntRect(28, 34, 83, 141));
-		}
-		else {
-			m_characterSprites->setTextureRect(IntRect(111, 34, -83, 141));
-		}
+		m_view.setCenter(m_characterSprites->getGlobalBounds().left + m_characterSprites->getGlobalBounds().width / 2, m_characterSprites->getGlobalBounds().top + m_characterSprites->getGlobalBounds().height / 2);
+		m_window->setView(m_view);
 	}	
 	else
 		display();

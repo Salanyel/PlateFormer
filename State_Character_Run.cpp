@@ -14,7 +14,10 @@ bool State_Character_Run::changeStateAvailable(CHARACTER_STATES newState)
 {
 	switch (newState)
 	{
-	case CHARACTER_STATES::STAND :
+	case STAND :
+		return true;
+
+	case JUMP :
 		return true;
 
 	default :

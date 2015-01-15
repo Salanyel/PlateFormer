@@ -14,7 +14,7 @@ bool State_Character_Jump::changeStateAvailable(CHARACTER_STATES newState)
 {
 	switch (newState)
 	{
-	case CHARACTER_STATES::STAND:
+	case FLY:
 		return true;
 
 	default: 

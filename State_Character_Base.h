@@ -4,7 +4,9 @@ enum CHARACTER_STATES
 {
 	STAND,
 	RUN,
-	JUMP
+	JUMP,
+	FLY,
+	LAND
 };
 
 class State_Character_Base

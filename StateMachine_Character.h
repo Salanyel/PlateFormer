@@ -5,6 +5,8 @@
 #include "State_Character_Stand.h"
 #include "State_Character_Run.h"
 #include "State_Character_Jump.h"
+#include "State_Character_Fly.h"
+#include "State_Character_Land.h"
 
 using namespace sf;
 using namespace std;

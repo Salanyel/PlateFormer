@@ -77,6 +77,45 @@ bool StateMachine_Character::changeState(CHARACTER_STATES newState)
 		m_stateId = newState;
 		return true;
 
+	case CHARACTER_STATES::FLY:
+		if (m_currentState != NULL)
+		{
+			if (!m_currentState->clearState())
+			{
+				cout << "Error during the cleaning of the character's state." << endl;
+				return false;
+			}
+			delete(m_currentState);
+		}
+
+		cout << "Creating character's state : FLY" << endl;
+		m_currentState = new State_Character_Fly();
+
+		if (!m_currentState->initState())
+			return false;
+
+		m_stateId = newState;
+		return true;
+
+	case LAND:
+		if (m_currentState != NULL)
+		{
+			if (!m_currentState->clearState())
+			{
+				cout << "Error during the cleaning of the character's state." << endl;
+				return false;
+			}
+			delete(m_currentState);
+		}
+
+		cout << "Creating character's state : LAND" << endl;
+		m_currentState = new State_Character_Land();
+
+		if (!m_currentState->initState())
+			return false;
+
+		m_stateId = newState;
+		return true;
 	default:
 		return false;
 	}
