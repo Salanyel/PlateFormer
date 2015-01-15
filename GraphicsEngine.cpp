@@ -291,20 +291,68 @@ void GraphicsEngine::setFocusSprite(float x)
 	}
 }
 
-void GraphicsEngine::moveCharacter(int x, int y)
+void GraphicsEngine::syncCharacter(int x, int y, int state, int orientation)
 {
-	if (x > m_characterSprites->getGlobalBounds().left)
-	{	
-		m_characterSprites->setTextureRect(IntRect(154, 214, 122, 137));
-		m_sens = 1;
+	int top;
+	int left;
+	switch (state)
+	{
+	case CHARACTER_STATES::STAND :
+		if (orientation == 1)
+		{
+			m_characterSprites->setTextureRect(IntRect(28, 36, orientation * 83, 139));
+		}
+		else
+		{
+			m_characterSprites->setTextureRect(IntRect(111, 36, orientation * 83, 139));
+		}
+		break;
+
+	case CHARACTER_STATES::RUN:
+		if (orientation == 1)
+		{
+			m_characterSprites->setTextureRect(IntRect(154, 214, orientation * 122, 137));
+		}
+		else
+		{
+			m_characterSprites->setTextureRect(IntRect(276, 214, orientation * 122, 141));
+		}
+		break;
+
+	case CHARACTER_STATES::JUMP :
+		if (orientation == 1)
+		{
+			m_characterSprites->setTextureRect(IntRect(1223, 373, orientation * 101, 137));
+		}
+		else
+		{
+			m_characterSprites->setTextureRect(IntRect(1324, 373, orientation * 101, 141));
+		}
+		break;
+			
+	
+	default:
+		break;
+	}
+
+	m_characterSprites->setPosition(Vector2f(x, y));	
+}
+/*
+void GraphicsEngine::syncCharacter(int x, int y, int orientation)
+{
+	int top;
+	int left;
+	if (orientation == 1)
+	{
+		m_characterSprites->setTextureRect(IntRect(154, 214, orientation * 122, 137));
 	}
 	else
 	{
-		m_characterSprites->setTextureRect(IntRect(276, 214, -122, 141));
-		m_sens = -1;
+		m_characterSprites->setTextureRect(IntRect(276, 214, orientation * 122, 141));
 	}
-	m_characterSprites->setPosition(Vector2f(x, y));	
-}
+
+	m_characterSprites->setPosition(Vector2f(x, y));
+}*/
 
 bool GraphicsEngine::collideText(double x, double y)
 {

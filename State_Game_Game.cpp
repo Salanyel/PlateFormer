@@ -56,7 +56,9 @@ bool State_Game_Game::clearState()
 
 void State_Game_Game::operate()
 {
+	m_physics->simulate();
 	m_graphics->draw();
+	m_physics->getCharacter()->getStateMachine()->changeState(CHARACTER_STATES::STAND);
 }
 
 void State_Game_Game::processEvents(Event event)

@@ -4,6 +4,8 @@
 Character::Character()
 {
 	m_orientation = 1;
+	m_jump = 0;
+	m_stateMachine = new StateMachine_Character();
 }
 
 Character::~Character()
@@ -30,35 +32,53 @@ int Character::getY()
 	return m_y;
 }
 
-void Character::move(int x, int y)
+void Character::move()
 {
-	if (x == -1)
-		m_x += -MOVE_VELOCITY;
-	
-	if (x == 1)
-		m_x += MOVE_VELOCITY;
+	switch (m_stateMachine->getIdCurrentState())
+	{
+	case CHARACTER_STATES::RUN :
+		m_x += m_orientation * MOVE_VELOCITY;
+		break;
 
-	if (y == -1)
-		m_y += -JUMP_VELOCITY;
-
-	if (y == 1)
-		m_y += JUMP_VELOCITY;
+	default :
+		break;
+	}
 }
 
 void Character::processEvents(Event event)
 {
-
+	/*if (event.type == Event::KeyPressed && event.key.code == Keyboard::Space)
+	{
+		m_stateMachine->changeState(CHARACTER_STATES::JUMP);
+	}*/
 }
 
 void Character::processEvents()
 {
 	if (Keyboard::isKeyPressed(Keyboard::Right))
 	{
+		m_stateMachine->changeState(CHARACTER_STATES::RUN);
 		m_orientation = 1;
 	}
 
 	if (Keyboard::isKeyPressed(Keyboard::Left))
 	{
+		m_stateMachine->changeState(CHARACTER_STATES::RUN);
 		m_orientation = -1;		
 	}
+
+	if (Keyboard::isKeyPressed(Keyboard::Space))
+	{
+		m_stateMachine->changeState(CHARACTER_STATES::JUMP);
+	}
+}
+
+StateMachine_Character * Character::getStateMachine()
+{
+	return m_stateMachine;
+}
+
+int Character::getOrientation()
+{
+	return m_orientation;
 }

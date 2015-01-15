@@ -2,7 +2,9 @@
 #include <SFML\Graphics.hpp>
 #include <iostream>
 #include "State_Character_Base.h"
-#include "Character.h"
+#include "State_Character_Stand.h"
+#include "State_Character_Run.h"
+#include "State_Character_Jump.h"
 
 using namespace sf;
 using namespace std;
@@ -10,14 +12,15 @@ using namespace std;
 class StateMachine_Character
 {
 public:
-	StateMachine_Character(Character * character);
+	StateMachine_Character();
 	~StateMachine_Character();
 
 	bool changeState(CHARACTER_STATES newState);
-	Character * getCharacter();
+	bool forceChangeState(CHARACTER_STATES newState);
 	State_Character_Base * getCurrentState();
+	CHARACTER_STATES getIdCurrentState();
 
 protected :
-	Character * m_character;
 	State_Character_Base * m_currentState;
+	CHARACTER_STATES m_stateId;
 };

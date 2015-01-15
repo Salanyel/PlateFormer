@@ -19,13 +19,16 @@ public:
 	void setY(int y);
 	int getX();
 	int getY();
-	void move(int x, int y);
+	void move();
 	void processEvents(Event event);
 	void processEvents();
+	StateMachine_Character * getStateMachine();
+	int getOrientation();
 	
 protected :
 	int m_x;
 	int m_y;
 	int m_orientation;
+	int m_jump;
 	StateMachine_Character * m_stateMachine;
 };

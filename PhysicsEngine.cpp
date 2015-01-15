@@ -27,12 +27,6 @@ void PhysicsEngine::setCharacter()
 	m_character->setY(tmp->getGlobalBounds().top);
 }
 
-void PhysicsEngine::operateCharacter(int x, int y)
-{
-	m_character->move(x, y);
-	m_graphics->moveCharacter(m_character->getX(), m_character->getY());
-}
-
 bool PhysicsEngine::initEngine()
 {
 	switch (m_currentState)
@@ -50,6 +44,12 @@ bool PhysicsEngine::initEngine()
 	}
 
 	return true;
+}
+
+void PhysicsEngine::simulate()
+{
+	m_character->move();
+	m_graphics->syncCharacter(m_character->getX(), m_character->getY(), m_character->getStateMachine()->getIdCurrentState(), m_character->getOrientation());
 }
 
 Character * PhysicsEngine::getCharacter()

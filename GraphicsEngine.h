@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include "CharacterImage.h"
+#include "State_Character_Base.h"
 
 using namespace sf;
 using namespace std;
@@ -33,7 +34,7 @@ public:
 	void setRessource();
 	void setFocusSprite(float x);
 
-	void moveCharacter(int x, int y);
+	void syncCharacter(int x, int y, int state, int orientation);
 	bool collideText(double x, double y);
 	void draw();
 	void display();	

@@ -1,10 +1,10 @@
 #include "StateMachine_Character.h"
 
 
-StateMachine_Character::StateMachine_Character(Character * character) : m_character(character)
+StateMachine_Character::StateMachine_Character()
 {
+	forceChangeState(CHARACTER_STATES::STAND);
 }
-
 
 StateMachine_Character::~StateMachine_Character()
 {
@@ -12,15 +12,113 @@ StateMachine_Character::~StateMachine_Character()
 
 bool StateMachine_Character::changeState(CHARACTER_STATES newState)
 {
+	if (!m_currentState->changeStateAvailable(newState))
+		return false;
+
+	switch (newState)
+	{
+	case CHARACTER_STATES::STAND:
+		if (m_currentState != NULL)
+		{
+			if (!m_currentState->clearState())
+			{
+				cout << "Error during the cleaning of the character's state." << endl;
+				return false;
+			}
+			delete(m_currentState);
+		}
+
+		cout << "Creating character's state : STAND" << endl;
+		m_currentState = new State_Character_Stand();
+
+		if (!m_currentState->initState())
+			return false;
+
+		m_stateId = newState;
+		return true;
+
+	case CHARACTER_STATES::RUN:
+		if (m_currentState != NULL)
+		{
+			if (!m_currentState->clearState())
+			{
+				cout << "Error during the cleaning of the character's state." << endl;
+				return false;
+			}
+			delete(m_currentState);
+		}
+
+		cout << "Creating character's state : RUN" << endl;
+		m_currentState = new State_Character_Run();
+
+		if (!m_currentState->initState())
+			return false;
+
+		m_stateId = newState;
+		return true;
+
+	case CHARACTER_STATES::JUMP:
+		if (m_currentState != NULL)
+		{
+			if (!m_currentState->clearState())
+			{
+				cout << "Error during the cleaning of the character's state." << endl;
+				return false;
+			}
+			delete(m_currentState);
+		}
+
+		cout << "Creating character's state : JUMP" << endl;
+		m_currentState = new State_Character_Jump();
+
+		if (!m_currentState->initState())
+			return false;
+
+		m_stateId = newState;
+		return true;
+
+	default:
+		return false;
+	}
 	return true;
 }
 
-Character * StateMachine_Character::getCharacter()
+bool StateMachine_Character::forceChangeState(CHARACTER_STATES newState)
 {
-	return m_character;
+	switch (newState)
+	{
+	case CHARACTER_STATES::STAND :
+		if (m_currentState != NULL)
+		{
+			if (!m_currentState->clearState())
+			{
+				cout << "Error during the cleaning of the character's state." << endl;
+				return false;
+			}
+			delete(m_currentState);
+		}
+
+		cout << "Creating character's state : STAND" << endl;
+		m_currentState = new State_Character_Stand();
+
+		if (!m_currentState->initState())
+			return false;
+
+		m_stateId = newState;
+		return true;
+
+	default : 
+		return false;
+	}
+	return true;
 }
 
-/*State_Character_Base * StateMachine_Character::getCurrentState()
+CHARACTER_STATES StateMachine_Character::getIdCurrentState()
+{
+	return m_stateId;
+}
+
+State_Character_Base * StateMachine_Character::getCurrentState()
 {
 	return m_currentState;
-}*/
+}

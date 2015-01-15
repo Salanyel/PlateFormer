@@ -25,8 +25,8 @@ public:
 	void setCurrentState(PHYSIC_STATES newState);
 	void setWindow(RenderWindow * window);
 	void setCharacter();
-	void operateCharacter(int x, int y);
 	bool initEngine();
+	void simulate();
 
 	Character * getCharacter();
 	Map * getMap();
