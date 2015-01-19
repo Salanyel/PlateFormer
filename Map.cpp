@@ -13,8 +13,9 @@ Map::~Map()
 
 Tile * Map::getTile(int x, int y)
 {
-	int yPlace = y * m_mapHeight;
-	cout << "X : " << x << " / Y : " << y << " // Place : " << yPlace + x << endl;
+
+	int yPlace = y * m_mapWidth;
+	//cout << "X : " << x << " / Y : " << y << " // yPlace : " << y * m_mapHeight<< " // Place : " << yPlace + x << endl;
 
 	return m_tiles.at(x + yPlace);
 }

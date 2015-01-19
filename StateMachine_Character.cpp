@@ -28,7 +28,6 @@ bool StateMachine_Character::changeState(CHARACTER_STATES newState)
 			delete(m_currentState);
 		}
 
-		cout << "Creating character's state : STAND" << endl;
 		m_currentState = new State_Character_Stand();
 
 		if (!m_currentState->initState())
@@ -48,7 +47,6 @@ bool StateMachine_Character::changeState(CHARACTER_STATES newState)
 			delete(m_currentState);
 		}
 
-		cout << "Creating character's state : RUN" << endl;
 		m_currentState = new State_Character_Run();
 
 		if (!m_currentState->initState())
@@ -68,7 +66,6 @@ bool StateMachine_Character::changeState(CHARACTER_STATES newState)
 			delete(m_currentState);
 		}
 
-		cout << "Creating character's state : JUMP" << endl;
 		m_currentState = new State_Character_Jump();
 
 		if (!m_currentState->initState())
@@ -88,7 +85,6 @@ bool StateMachine_Character::changeState(CHARACTER_STATES newState)
 			delete(m_currentState);
 		}
 
-		cout << "Creating character's state : FLY" << endl;
 		m_currentState = new State_Character_Fly();
 
 		if (!m_currentState->initState())
@@ -108,7 +104,6 @@ bool StateMachine_Character::changeState(CHARACTER_STATES newState)
 			delete(m_currentState);
 		}
 
-		cout << "Creating character's state : LAND" << endl;
 		m_currentState = new State_Character_Land();
 
 		if (!m_currentState->initState())
@@ -137,7 +132,6 @@ bool StateMachine_Character::forceChangeState(CHARACTER_STATES newState)
 			delete(m_currentState);
 		}
 
-		cout << "Creating character's state : STAND" << endl;
 		m_currentState = new State_Character_Stand();
 
 		if (!m_currentState->initState())

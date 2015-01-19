@@ -23,6 +23,14 @@ void Character::setY(int y)
 	m_y = y;
 }
 
+void Character::setCenter()
+{
+	int width = CHARACTER_WIDTH;
+	int height = CHARACTER_HEIGHT;
+	m_center.x = m_x + width / 2;
+	m_center.y = m_y + height / 2;
+}
+
 int Character::getX()
 {
 	return m_x;
@@ -31,6 +39,11 @@ int Character::getX()
 int Character::getY()
 {
 	return m_y;
+}
+
+coordonnee Character::getCenter()
+{
+	return m_center;
 }
 
 void Character::move()
@@ -42,7 +55,7 @@ void Character::move()
 		break;
 
 	case JUMP :
-		cout << m_jump << "/" << m_jumpMax << endl;
+		m_yOrientation = -1;
 		if (m_jump < m_jumpMax)
 		{
 			m_y -= JUMP_VELOCITY;
@@ -51,7 +64,6 @@ void Character::move()
 
 		if (m_jump >= m_jumpMax)
 		{
-			cout << "JUMP MAX !" << endl;
 			m_y += abs(m_jumpMax - m_jump);
 			m_jump = m_jumpMax;
 			m_stateMachine->changeState(FLY);
@@ -59,8 +71,8 @@ void Character::move()
 		break;
 
 	case FLY :
-		cout << m_jump << "/0" << endl;
-		if (m_jump > 0)
+		m_yOrientation = 1;
+		/*if (m_jump > 0)
 		{
 			m_y += FALL_VELOCITY;
 			m_jump -= FALL_VELOCITY;
@@ -68,16 +80,25 @@ void Character::move()
 
 		if (m_jump < 0)
 		{
-			cout << "LAND !";	
 			m_y += m_jump;			
 			m_jump = 0;
 			m_stateMachine->changeState(LAND);
-		}
+		}*/
+		m_y += FALL_VELOCITY;
+		break;
+
+
+	case LAND :
+		m_jump = 0;
+		m_yOrientation = 0;
 		break;
 
 	default :
 		break;
 	}
+	//cout << m_center.y << endl;
+	cout << m_yOrientation << endl;
+	setCenter();
 }
 
 void Character::jumpControl()
@@ -87,10 +108,7 @@ void Character::jumpControl()
 
 void Character::processEvents(Event event)
 {
-	/*if (event.type == Event::KeyPressed && event.key.code == Keyboard::Space)
-	{
-		m_stateMachine->changeState(JUMP);
-	}*/
+
 }
 
 void Character::processEvents()
@@ -129,4 +147,9 @@ StateMachine_Character * Character::getStateMachine()
 int Character::getOrientation()
 {
 	return m_orientation;
+}
+
+int Character::getYOrientation()
+{
+	return m_yOrientation;
 }

@@ -20,6 +20,9 @@ bool State_Character_Run::changeStateAvailable(CHARACTER_STATES newState)
 	case JUMP :
 		return true;
 
+	case FLY :
+		return true;
+
 	default :
 		return false;
 	}

@@ -26,6 +26,9 @@ public:
 	void setWindow(RenderWindow * window);
 	void setCharacter();
 	bool initEngine();
+	bool collide();
+	bool fall();
+	void correct();
 	void simulate();
 
 	Character * getCharacter();
