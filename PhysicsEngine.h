@@ -27,7 +27,6 @@ public:
 	void setCharacter();
 	bool initEngine();
 	bool collide();
-	bool fall();
 	void correct();
 	void simulate();
 

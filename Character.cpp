@@ -5,12 +5,13 @@ Character::Character()
 {
 	m_orientation = 1;
 	m_jump = 0;
-	m_jumpMax = 100;
+	m_jumpMax = 200;
 	m_stateMachine = new StateMachine_Character();
 }
 
 Character::~Character()
 {
+	delete(m_stateMachine);
 }
 
 void Character::setX(int x)
@@ -97,7 +98,7 @@ void Character::move()
 		break;
 	}
 	//cout << m_center.y << endl;
-	cout << m_yOrientation << endl;
+	//cout << m_yOrientation << endl;
 	setCenter();
 }
 

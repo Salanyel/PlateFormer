@@ -8,6 +8,7 @@ StateMachine_Character::StateMachine_Character()
 
 StateMachine_Character::~StateMachine_Character()
 {
+	delete(m_currentState);
 }
 
 bool StateMachine_Character::changeState(CHARACTER_STATES newState)

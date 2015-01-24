@@ -9,6 +9,9 @@ State_Game_Game::State_Game_Game(RenderWindow * window) : State_Game_Base(window
 
 State_Game_Game::~State_Game_Game()
 {
+	delete(m_physics);
+	delete(m_graphics);
+	delete(m_player);
 }
 
 int State_Game_Game::getStateStatus()
@@ -66,7 +69,9 @@ void State_Game_Game::processEvents(Event event)
 {
 	XINPUT_STATE state = m_player->GetState();
 	if (event.type == Event::Closed || event.type == Event::KeyPressed && event.key.code == Keyboard::Escape || (state.Gamepad.wButtons & XINPUT_GAMEPAD_BACK))
+	{		
 		m_window->close();
+	}
 	else
 		m_physics->getCharacter()->processEvents(event);
 }
