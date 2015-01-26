@@ -26,8 +26,10 @@ public:
 	void setWindow(RenderWindow * window);
 	void setCharacter();
 	bool initEngine();
-	bool collide();
-	void correct();
+	void collide();
+	int collideY();
+	int collideX();
+	void fallingTest();
 	void simulate();
 
 	Character * getCharacter();

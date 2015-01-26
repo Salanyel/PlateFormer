@@ -6,11 +6,11 @@
 using namespace std;
 using namespace sf;
 
-#define MOVE_VELOCITY 4;
-#define JUMP_VELOCITY 7;
-#define FALL_VELOCITY 7;
-#define CHARACTER_WIDTH 64;
-#define CHARACTER_HEIGHT 64;
+#define MOVE_VELOCITY 4
+#define JUMP_VELOCITY 7
+#define FALL_VELOCITY 7
+#define CHARACTER_WIDTH 48
+#define CHARACTER_HEIGHT 64
 
 struct coordonnee
 {

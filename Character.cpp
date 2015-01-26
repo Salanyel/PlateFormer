@@ -109,7 +109,10 @@ void Character::jumpControl()
 
 void Character::processEvents(Event event)
 {
-
+	if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape || event.type == Event::KeyPressed && event.key.code == Keyboard::Up)
+	{
+		m_stateMachine->changeState(JUMP);
+	}
 }
 
 void Character::processEvents()
@@ -134,10 +137,10 @@ void Character::processEvents()
 		}
 	}
 
-	if (Keyboard::isKeyPressed(Keyboard::Space) || Keyboard::isKeyPressed(Keyboard::Up))
+	/*if (Keyboard::isKeyPressed(Keyboard::Space) || Keyboard::isKeyPressed(Keyboard::Up))
 	{
 		m_stateMachine->changeState(JUMP);
-	}
+	}*/
 }
 
 StateMachine_Character * Character::getStateMachine()

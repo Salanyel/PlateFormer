@@ -47,62 +47,132 @@ bool PhysicsEngine::initEngine()
 	return true;
 }
 
-bool PhysicsEngine::collide()
+void PhysicsEngine::collide()
 {
-	//TODO : Revoir l'algo de collision
-	//Prioriser y
-	//Puis X
-	//Essayer de faire une méthode générale
-
-	coordonnee center = m_character->getCenter();
-	int xOrientation = m_character->getOrientation();
-	int yOrientation = m_character->getYOrientation();
-	int characterHeight = CHARACTER_HEIGHT;
-	int characterWidth = CHARACTER_WIDTH;
-	int correct = 0;
-	int it;
 	Tile * tile;
-	Tile * tileTop;
-	Tile * tileBottom;
-	
+	coordonnee center = m_character->getCenter();
+	int correctX = 0;
+	int correctY = 0;
+
 	//Collide on Y
-	if (yOrientation != 0)
+	if (m_character->getYOrientation() != 0)
 	{
-		tile = m_map->getTile(center.x / 64, (center.y + (yOrientation * characterHeight / 2)) / 64);
+		correctY = collideY();
+		if (correctY != 0)
+		{
+			m_character->setY(center.y - CHARACTER_HEIGHT / 2 - correctY);
+		}			
+
+		m_character->setCenter();
+	}			
+
+	//Collide on X
+	if (correctY == 0)
+	{
+		correctX = collideX();
+		if (correctX != 0)
+			m_character->setX(correctX);
+		m_character->setCenter();
+	}
+	
+	//Test if the character is falling
+	fallingTest();
+}
+
+int PhysicsEngine::collideY()
+{
+	Tile * tile;
+	int newPosition = 0;
+	int yOrientation = m_character->getYOrientation();
+	coordonnee center = m_character->getCenter();
+	
+	for (int it = - CHARACTER_WIDTH / 2; it < CHARACTER_WIDTH / 2; ++it)
+	{
+		tile = m_map->getTile((center.x + it) / 64, (center.y + (yOrientation * CHARACTER_HEIGHT / 2)) / 64);
 		if (tile->isSolid())
 		{
 			if (yOrientation == 1)
 			{
-				correct = (center.y + (yOrientation * characterHeight / 2)) - (center.y + (yOrientation * characterHeight / 2)) / 64 * 64;
-				m_character->setY(center.y - characterHeight / 2 - correct);
+				newPosition = (center.y + (yOrientation * CHARACTER_HEIGHT / 2)) - (center.y + (yOrientation * CHARACTER_HEIGHT / 2)) / 64 * 64;
+				return newPosition;
 			}
-			else {
+			else
+			{
+				newPosition = (center.y + (yOrientation * CHARACTER_HEIGHT / 2)) - ((center.y + (yOrientation * CHARACTER_HEIGHT / 2)) / 64 + 1) * 64;
 				m_character->getStateMachine()->changeState(FLY);
-			}			
+				return newPosition;
+			}				
 		}
-	}
-
-	//Collide on X
-	tile = m_map->getTile((center.x + (xOrientation * characterWidth / 2)) / 64, center.y / 64);
-	if (tile->isSolid())
-	{
-		cout << "Collide X" << endl;
 	}	
-
-	tile = m_map->getTile(center.x / 64, (center.y + characterHeight / 2) / 64);
-	//cout << "Under tile : " << center.x / 64 << "x" << (center.y + characterHeight / 2) / 64 + 1 << endl;
-	if (!tile->isSolid() && m_character->getStateMachine()->getIdCurrentState() != JUMP)
-	{
-		m_character->getStateMachine()->changeState(FLY);
-	}
-	else {
-		m_character->getStateMachine()->changeState(LAND);
-	}	
-
-	return false;	
+	return 0;
 }
 
-void PhysicsEngine::correct()
+int PhysicsEngine::collideX()
+{
+	//TODO : correct the algo
+	Tile * tile;
+	int correct = 0;
+	coordonnee center = m_character->getCenter();
+	int xOrientation = m_character->getOrientation();
+
+	for (int it = -CHARACTER_HEIGHT / 2; it < CHARACTER_HEIGHT / 2; ++it)
+	{
+		tile = m_map->getTile((center.x + (xOrientation * CHARACTER_WIDTH / 2)) / 64, (center.y + it) / 64);
+		if (tile->isSolid())
+		{
+			if (xOrientation == 1)
+			{
+				cout << "Right collide detected." << endl;				
+				correct = ((center.x + (xOrientation * CHARACTER_WIDTH / 2)) / 64 * 64);
+				cout << "Emplacement tile : " << correct;
+				correct = correct + (-xOrientation * CHARACTER_WIDTH);
+				cout << " -- Correct : " << correct << endl << endl;
+				m_character->getStateMachine()->changeState(STAND);
+				/*correct = ((center.x + (xOrientation * CHARACTER_WIDTH / 2)) / 64 * 64) + (-xOrientation * CHARACTER_WIDTH);
+				cout << center.x << "(" << correct << ")" << endl << endl;
+				return correct;*/
+				return correct;
+			}
+			else
+			{
+				cout << "Left collide detected." << endl;
+				correct = ((center.x + (xOrientation * CHARACTER_WIDTH / 2)) / 64 * 64);
+				cout << "Emplacement tile : " << correct;
+				correct = correct + 64;
+				cout << " -- Correct : " << correct << endl << endl;
+				m_character->getStateMachine()->changeState(STAND);
+				/*correct = ((center.x + (xOrientation * CHARACTER_WIDTH / 2)) / 64 * 64) + (-xOrientation * CHARACTER_WIDTH);
+				cout << center.x << "(" << correct << ")" << endl << endl;
+				return correct;*/
+				return correct;
+			}
+		}
+	}
+	return 0;
+}
+
+void PhysicsEngine::fallingTest()
+{
+	Tile * tile;
+	coordonnee center = m_character->getCenter();
+	int it;
+
+	for (it = -CHARACTER_WIDTH / 2; it < CHARACTER_WIDTH / 2; ++it)
+	{
+		tile = m_map->getTile((center.x + it) / 64, (center.y + CHARACTER_HEIGHT / 2) / 64);
+		if (!tile->isSolid() && m_character->getStateMachine()->getIdCurrentState() != JUMP)
+		{
+			m_character->getStateMachine()->changeState(FLY);
+		}
+		else
+		{
+			m_character->getStateMachine()->changeState(LAND);
+			return;
+		}
+	}	
+}
+
+/*void PhysicsEngine::correct()
 {
 	Tile * tile;
 	int xCharacter = m_character->getCenter().x;
@@ -147,16 +217,13 @@ void PhysicsEngine::correct()
 			}
 		}
 	}
-}
+}*/
 
 void PhysicsEngine::simulate()
 {
-	if (!collide())
-	{
-		//fall();
-		m_character->move();
-		m_graphics->syncCharacter(m_character->getX(), m_character->getY(), m_character->getStateMachine()->getIdCurrentState(), m_character->getOrientation());
-	}
+	collide();	
+	m_character->move();
+	m_graphics->syncCharacter(m_character->getX(), m_character->getY(), m_character->getStateMachine()->getIdCurrentState(), m_character->getOrientation());
 }
 
 Character * PhysicsEngine::getCharacter()
