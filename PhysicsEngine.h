@@ -6,6 +6,7 @@
 #include "character.h"
 #include "GraphicsEngine.h"
 #include "CharacterImage.h"
+#include "Momentum.h"
 
 using namespace std;
 using namespace sf;
@@ -31,6 +32,7 @@ public:
 	int collideX();
 	void fallingTest();
 	void simulate();
+	void saveMomentum();
 
 	Character * getCharacter();
 	Map * getMap();
@@ -42,5 +44,6 @@ protected:
 	PHYSIC_STATES m_currentState;
 
 	Character * m_character;
+	vector<Momentum *> * m_momentums;
 };
 

@@ -3,11 +3,14 @@
 PhysicsEngine::PhysicsEngine(RenderWindow * window, GraphicsEngine * graphics) : m_window(window), m_graphics(graphics)
 {
 	m_map = new Map("Assets/Maps/maps.xml");
+	m_momentums = new vector < Momentum * >() ;
 }
 
 PhysicsEngine::~PhysicsEngine()
 {
 	delete(m_map);
+	m_momentums->clear();
+	delete(m_momentums);
 }
 
 void PhysicsEngine::setCurrentState(PHYSIC_STATES newState)
@@ -49,7 +52,65 @@ bool PhysicsEngine::initEngine()
 
 void PhysicsEngine::collide()
 {
+	coordonnee center = m_character->getCenter();
+	int xOrientation = m_character->getOrientation();
+	int yOrientation = m_character->getYOrientation();
+	int characterHeight = CHARACTER_HEIGHT;
+	int characterWidth = CHARACTER_WIDTH;
+	int correctX = 0;
+	int correctY = 0;
+	int it;
 	Tile * tile;
+	Tile * tileTop;
+	Tile * tileBottom;
+
+	//Collide on Y
+	if (yOrientation != 0)
+	{
+		tile = m_map->getTile(center.x / 64, (center.y + (yOrientation * characterHeight / 2)) / 64);
+		if (tile->isSolid())
+		{
+			if (yOrientation == 1)
+			{
+				correctY = (center.y + (yOrientation * characterHeight / 2)) - (center.y + (yOrientation * characterHeight / 2)) / 64 * 64;
+			}
+			else {
+				m_character->getStateMachine()->changeState(FLY);
+			}
+		}
+	}
+
+	//Collide on X
+	tile = m_map->getTile((center.x + (xOrientation * characterWidth / 2)) / 64, center.y / 64);
+	if (tile->isSolid())
+	{
+		if (xOrientation == 1)
+		{
+			correctX = ((center.x + (xOrientation * characterWidth / 2)) / 64 * 64) + (-xOrientation * characterWidth);
+		}
+		else {
+			correctX = ((center.x + (xOrientation * characterWidth / 2)) / 64 * 64) + (-xOrientation * characterWidth) - 1;
+		}
+	}
+
+	if (correctY != 0)
+		m_character->setY(center.y - characterHeight / 2 - correctY);
+
+	if (correctX != 0)
+		m_character->setX(correctX);
+
+	m_character->setCenter();
+
+	tile = m_map->getTile(center.x / 64, (center.y + characterHeight / 2) / 64);
+	if (!tile->isSolid() && m_character->getStateMachine()->getIdCurrentState() != JUMP)
+	{
+		m_character->getStateMachine()->changeState(FLY);
+	}
+	else {
+		m_character->getStateMachine()->changeState(LAND);
+	}
+}
+	/*Tile * tile;
 	coordonnee center = m_character->getCenter();
 	int correctX = 0;
 	int correctY = 0;
@@ -128,9 +189,6 @@ int PhysicsEngine::collideX()
 				correct = correct + (-xOrientation * CHARACTER_WIDTH);
 				cout << " -- Correct : " << correct << endl << endl;
 				m_character->getStateMachine()->changeState(STAND);
-				/*correct = ((center.x + (xOrientation * CHARACTER_WIDTH / 2)) / 64 * 64) + (-xOrientation * CHARACTER_WIDTH);
-				cout << center.x << "(" << correct << ")" << endl << endl;
-				return correct;*/
 				return correct;
 			}
 			else
@@ -141,9 +199,6 @@ int PhysicsEngine::collideX()
 				correct = correct + 64;
 				cout << " -- Correct : " << correct << endl << endl;
 				m_character->getStateMachine()->changeState(STAND);
-				/*correct = ((center.x + (xOrientation * CHARACTER_WIDTH / 2)) / 64 * 64) + (-xOrientation * CHARACTER_WIDTH);
-				cout << center.x << "(" << correct << ")" << endl << endl;
-				return correct;*/
 				return correct;
 			}
 		}
@@ -171,7 +226,7 @@ void PhysicsEngine::fallingTest()
 		}
 	}	
 }
-
+*/
 /*void PhysicsEngine::correct()
 {
 	Tile * tile;
@@ -222,7 +277,30 @@ void PhysicsEngine::fallingTest()
 void PhysicsEngine::simulate()
 {
 	collide();	
-	m_character->move();
+	if (m_character->getChronoTrigger() == 1)
+	{
+		Momentum * momentum = new Momentum();
+		if (! m_momentums->empty())
+		{ 
+			momentum = m_momentums->back();
+			m_momentums->pop_back();
+
+			m_character->setX(momentum->getX());
+			m_character->setY(momentum->getY());
+			m_character->setJump(momentum->getJump());
+			m_character->setXOrientation(momentum->getXOrientation());
+			m_character->setYOrientation(momentum->getYOrientation());
+			m_character->getStateMachine()->forceChangeState(momentum->getState());
+			m_character->setCenter();
+			m_character->setChronoTrigger();
+		}		
+	}
+	else
+	{
+		m_character->move();
+		saveMomentum();
+	}	
+
 	m_graphics->syncCharacter(m_character->getX(), m_character->getY(), m_character->getStateMachine()->getIdCurrentState(), m_character->getOrientation());
 }
 
@@ -234,4 +312,20 @@ Character * PhysicsEngine::getCharacter()
 Map * PhysicsEngine::getMap()
 {
 	return m_map;
+}
+
+void PhysicsEngine::saveMomentum()
+{
+	Momentum * momentum;
+	//Momentum(int yOrientation, int xOrientation, int jump, int x, int y, CHARACTER_STATES state);
+	momentum = new Momentum(m_character->getYOrientation(),
+		m_character->getOrientation(),
+		m_character->getJump(),
+		m_character->getCenter().x - CHARACTER_WIDTH / 2,
+		m_character->getCenter().y - CHARACTER_HEIGHT / 2,
+		m_character->getStateMachine()->getIdCurrentState());
+
+	//momentum->display();
+
+	m_momentums->push_back(momentum);
 }

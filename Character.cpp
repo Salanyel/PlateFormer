@@ -7,6 +7,7 @@ Character::Character()
 	m_jump = 0;
 	m_jumpMax = 200;
 	m_stateMachine = new StateMachine_Character();
+	m_chronoTrigger = 0;
 }
 
 Character::~Character()
@@ -32,6 +33,31 @@ void Character::setCenter()
 	m_center.y = m_y + height / 2;
 }
 
+void Character::setChronoTrigger()
+{
+	if (m_chronoTrigger == 0)
+	{
+		m_chronoTrigger = 1;
+	}
+	else
+		m_chronoTrigger = 0;
+}
+
+void Character::setJump(int jump)
+{
+	m_jump = jump;
+}
+
+void Character::setXOrientation(int xOrientation)
+{
+	m_orientation = xOrientation;
+}
+
+void Character::setYOrientation(int yOrientation)
+{
+	m_yOrientation = yOrientation;
+}
+
 int Character::getX()
 {
 	return m_x;
@@ -42,9 +68,19 @@ int Character::getY()
 	return m_y;
 }
 
+int Character::getChronoTrigger()
+{
+	return m_chronoTrigger;
+}
+
 coordonnee Character::getCenter()
 {
 	return m_center;
+}
+
+int Character::getJump()
+{
+	return m_jump;
 }
 
 void Character::move()
@@ -135,6 +171,11 @@ void Character::processEvents()
 		{
 			jumpControl();
 		}
+	}
+
+	if (Keyboard::isKeyPressed(Keyboard::LControl))
+	{		
+		setChronoTrigger();
 	}
 
 	/*if (Keyboard::isKeyPressed(Keyboard::Space) || Keyboard::isKeyPressed(Keyboard::Up))
