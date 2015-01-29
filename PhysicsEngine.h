@@ -32,12 +32,15 @@ public:
 	int collideX();
 	void fallingTest();
 	void simulate();
+	void operateShadow();
 	void saveMomentum();
 
 	Character * getCharacter();
 	Map * getMap();
 
 protected:
+	int m_shadowX;
+	int m_shadowY;
 	RenderWindow * m_window;
 	GraphicsEngine * m_graphics;
 	Map * m_map;

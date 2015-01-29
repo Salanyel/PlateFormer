@@ -110,6 +110,7 @@ void PhysicsEngine::collide()
 		m_character->getStateMachine()->changeState(LAND);
 	}
 }
+
 	/*Tile * tile;
 	coordonnee center = m_character->getCenter();
 	int correctX = 0;
@@ -297,11 +298,27 @@ void PhysicsEngine::simulate()
 	}
 	else
 	{
+		operateShadow();
 		m_character->move();
 		saveMomentum();
 	}	
 
 	m_graphics->syncCharacter(m_character->getX(), m_character->getY(), m_character->getStateMachine()->getIdCurrentState(), m_character->getOrientation());
+}
+
+void PhysicsEngine::operateShadow()
+{
+	switch (m_character->getShadowUse())
+	{
+	case 1: 
+		m_shadowX = m_character->getX();
+		m_shadowY = m_character->getY();
+		m_graphics->createShadow(m_shadowX, m_shadowY, m_character->getOrientation());
+		m_character->setShadowUse(2);
+
+	default:
+		break;
+	}
 }
 
 Character * PhysicsEngine::getCharacter()

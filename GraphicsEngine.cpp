@@ -6,12 +6,15 @@ GraphicsEngine::GraphicsEngine(RenderWindow * window)
 	m_view.setCenter(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
 	m_view.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 	m_window->setView(m_view);
+	m_displayShadow = false;
 }
 
 GraphicsEngine::~GraphicsEngine()
 {
 	emptyObjects();
 	delete(m_map);
+	delete(m_shadow);
+	delete(m_characterSprites);
 }
 
 void GraphicsEngine::setCurrentState(GRAPHIC_STATES newState)
@@ -134,6 +137,14 @@ bool GraphicsEngine::loadTexture()
 		}
 
 		m_textures.push_back(*text);
+
+		if (!text->loadFromFile("./Assets/Images/Shadow.png"))
+		{
+			cout << "Error during the loading of the textures (Shadow.png)" << endl;
+			return false;
+		}
+
+		m_textures.push_back(*text);
 		return true;
 
 	default:
@@ -250,8 +261,11 @@ void GraphicsEngine::initSprites()
 				break;
 			}			
 			sprite->setPosition(64 * (it%mapWidth), 64 * (it/mapWidth));			
-			m_mapSprites.push_back(sprite);			
+			m_mapSprites.push_back(sprite);
 		}	
+		m_shadow = new Sprite();
+		m_shadow->setTexture(m_textures.back());
+		m_shadow->setScale(0.51, 0.44);
 		break;
 
 	default:
@@ -278,6 +292,16 @@ void GraphicsEngine::setRessource()
 			sprite->setPosition(sprite->getPosition().x, text2->getPosition().y + (text2->getLocalBounds().height - sprite->getLocalBounds().height) / 2);
 		}
 	}
+}
+
+void GraphicsEngine::createShadow(int shadowX, int shadowY, int orientation)
+{
+	m_shadow->setPosition(Vector2f(shadowX, shadowY));
+	if (orientation == -1)
+		m_shadow->setTextureRect(IntRect(126, 0, -126, 144));
+	else
+		m_shadow->setTextureRect(IntRect(0, 0, 126, 144));
+	m_displayShadow = 1;
 }
 
 void GraphicsEngine::setFocusSprite(float x)
@@ -391,7 +415,9 @@ void GraphicsEngine::draw()
 	}
 
 	if (m_currentState == GAME_GRAPHICS)
-	{
+	{		
+		if (m_displayShadow)
+			m_window->draw(*m_shadow);
 		m_window->draw(*m_characterSprites);
 		display();
 		m_view.setCenter(m_characterSprites->getGlobalBounds().left + m_characterSprites->getGlobalBounds().width / 2, m_characterSprites->getGlobalBounds().top + m_characterSprites->getGlobalBounds().height / 2);

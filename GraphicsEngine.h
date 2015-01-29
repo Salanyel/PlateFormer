@@ -28,10 +28,11 @@ public:
 	bool loadRessource();
 	bool loadFont();
 	bool loadTexture();
-	void emptyObjects();
+	void emptyObjects();	
 	void initTexts();
 	void initSprites();
 	void setRessource();
+	void createShadow(int shadowX, int shadowY, int orientation);
 	void setFocusSprite(float x);
 
 	void syncCharacter(int x, int y, int state, int orientation);
@@ -53,6 +54,8 @@ protected:
 	vector<Sprite *> m_sprites;	
 	vector<Sprite *> m_mapSprites;
 	Sprite * m_characterSprites;
+	bool m_displayShadow;
+	Sprite * m_shadow;
 
 	int m_currentState;
 	const double SCREEN_WIDTH = 800;

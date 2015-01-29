@@ -3,16 +3,19 @@
 
 Character::Character()
 {
+	m_shadowUse = 0;
 	m_orientation = 1;
 	m_jump = 0;
 	m_jumpMax = 200;
 	m_stateMachine = new StateMachine_Character();
 	m_chronoTrigger = 0;
+	m_player1 = new CXBOXController(1);
 }
 
 Character::~Character()
 {
 	delete(m_stateMachine);
+	delete(m_player1);
 }
 
 void Character::setX(int x)
@@ -58,6 +61,11 @@ void Character::setYOrientation(int yOrientation)
 	m_yOrientation = yOrientation;
 }
 
+void Character::setShadowUse(int shadowUse)
+{
+	m_shadowUse = shadowUse;
+}
+
 int Character::getX()
 {
 	return m_x;
@@ -81,6 +89,11 @@ coordonnee Character::getCenter()
 int Character::getJump()
 {
 	return m_jump;
+}
+
+int Character::getShadowUse()
+{
+	return m_shadowUse;
 }
 
 void Character::move()
@@ -145,15 +158,35 @@ void Character::jumpControl()
 
 void Character::processEvents(Event event)
 {
-	if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape || event.type == Event::KeyPressed && event.key.code == Keyboard::Up)
+	m_state = m_player1->GetState();
+
+	if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape || event.type == Event::KeyPressed && event.key.code == Keyboard::Up || (m_state.Gamepad.wButtons & XINPUT_GAMEPAD_A) )
 	{
 		m_stateMachine->changeState(JUMP);
+	}
+
+	if ((event.type == Event::KeyPressed && event.key.code == Keyboard::LShift) || (m_state.Gamepad.wButtons & XINPUT_GAMEPAD_X))
+	{
+		m_shadowUse = 1;
 	}
 }
 
 void Character::processEvents()
 {
-	if (Keyboard::isKeyPressed(Keyboard::Right))
+	m_state = m_player1->GetState();
+
+	float gamePadDirection = 0;
+	float LX = m_state.Gamepad.sThumbLX;	
+	float magnitude = sqrt(LX * LX + LX * LX);
+	float normalizedLX = LX / magnitude;
+
+	if (magnitude > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+		if (normalizedLX < 0)
+			gamePadDirection = -1;
+		else
+			gamePadDirection = 1;
+
+	if (Keyboard::isKeyPressed(Keyboard::Right) || gamePadDirection == 1)
 	{
 		m_stateMachine->changeState(RUN);
 		m_orientation = 1;
@@ -163,7 +196,7 @@ void Character::processEvents()
 		}			
 	}
 
-	if (Keyboard::isKeyPressed(Keyboard::Left))
+	if (Keyboard::isKeyPressed(Keyboard::Left) ||gamePadDirection == -1)
 	{
 		m_stateMachine->changeState(RUN);
 		m_orientation = -1;		
@@ -173,7 +206,7 @@ void Character::processEvents()
 		}
 	}
 
-	if (Keyboard::isKeyPressed(Keyboard::LControl))
+	if (Keyboard::isKeyPressed(Keyboard::LControl) || (m_state.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) )
 	{		
 		setChronoTrigger();
 	}

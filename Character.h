@@ -2,6 +2,7 @@
 #include "SFML\Graphics.hpp"
 #include <iostream>
 #include "StateMachine_Character.h"
+#include "CXBOXController.h"
 
 using namespace std;
 using namespace sf;
@@ -31,11 +32,13 @@ public:
 	void setJump(int jump);
 	void setXOrientation(int xOrientation);
 	void setYOrientation(int yOrientation);
+	void setShadowUse(int shadowUse);
 	int getX();
 	int getY();
 	int getChronoTrigger();
 	int getJump();
 	coordonnee getCenter();
+	int getShadowUse();
 	void move();
 	void jumpControl();
 	void processEvents(Event event);
@@ -52,6 +55,10 @@ protected :
 	int m_jump;
 	int m_jumpMax;
 	int m_chronoTrigger;
+	int m_shadowUse;
 	coordonnee m_center;
 	StateMachine_Character * m_stateMachine;
+	XINPUT_STATE m_state;
+	CXBOXController * m_player1;
+	
 };
