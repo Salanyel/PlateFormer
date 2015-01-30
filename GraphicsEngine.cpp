@@ -304,6 +304,11 @@ void GraphicsEngine::createShadow(int shadowX, int shadowY, int orientation)
 	m_displayShadow = 1;
 }
 
+void GraphicsEngine::disableShadow()
+{
+	m_displayShadow = false;
+}
+
 void GraphicsEngine::setFocusSprite(float x)
 {
 	switch (m_currentState)

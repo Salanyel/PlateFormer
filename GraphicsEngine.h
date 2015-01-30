@@ -33,6 +33,7 @@ public:
 	void initSprites();
 	void setRessource();
 	void createShadow(int shadowX, int shadowY, int orientation);
+	void disableShadow();
 	void setFocusSprite(float x);
 
 	void syncCharacter(int x, int y, int state, int orientation);

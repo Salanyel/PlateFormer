@@ -313,8 +313,18 @@ void PhysicsEngine::operateShadow()
 	case 1: 
 		m_shadowX = m_character->getX();
 		m_shadowY = m_character->getY();
-		m_graphics->createShadow(m_shadowX, m_shadowY, m_character->getOrientation());
+		m_shadowOrientation = m_character->getOrientation();
+		m_graphics->createShadow(m_shadowX, m_shadowY, m_shadowOrientation);
 		m_character->setShadowUse(2);
+		break;
+
+	case 3:
+		m_character->setX(m_shadowX);
+		m_character->setY(m_shadowY);
+		m_character->setXOrientation(m_shadowOrientation);
+		m_character->setShadowUse(0);
+		m_graphics->disableShadow();
+		break;
 
 	default:
 		break;

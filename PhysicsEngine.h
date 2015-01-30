@@ -41,6 +41,7 @@ public:
 protected:
 	int m_shadowX;
 	int m_shadowY;
+	int m_shadowOrientation;
 	RenderWindow * m_window;
 	GraphicsEngine * m_graphics;
 	Map * m_map;
