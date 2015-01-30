@@ -2,8 +2,9 @@
 
 PhysicsEngine::PhysicsEngine(RenderWindow * window, GraphicsEngine * graphics) : m_window(window), m_graphics(graphics)
 {
-	m_map = new Map("Assets/Maps/maps.xml");
-	m_momentums = new vector < Momentum * >() ;
+	m_mapNumber = 1;
+	m_map = new Map("Assets/Maps/map_01.xml");
+	m_momentums = new vector < Momentum * >();
 }
 
 PhysicsEngine::~PhysicsEngine()
@@ -65,9 +66,17 @@ void PhysicsEngine::collide()
 	Tile * tileBottom;
 
 	//Collide on Y
+	//TODO : add the next level loading
 	if (yOrientation != 0)
 	{
 		tile = m_map->getTile(center.x / 64, (center.y + (yOrientation * characterHeight / 2)) / 64);
+	
+		if (tile->isNextLevel())
+		{
+			loadNextMap();
+			return;
+		}			
+
 		if (tile->isSolid())
 		{
 			if (yOrientation == 1)
@@ -82,6 +91,13 @@ void PhysicsEngine::collide()
 
 	//Collide on X
 	tile = m_map->getTile((center.x + (xOrientation * characterWidth / 2)) / 64, center.y / 64);
+	
+	if (tile->isNextLevel())
+	{
+		loadNextMap();
+		return;
+	}
+
 	if (tile->isSolid())
 	{
 		if (xOrientation == 1)
@@ -294,6 +310,19 @@ void PhysicsEngine::simulate()
 			m_character->getStateMachine()->forceChangeState(momentum->getState());
 			m_character->setCenter();
 			m_character->setChronoTrigger();
+
+			if (momentum->getShadowOrientation() == 0)
+			{
+				m_character->setShadowUse(0);
+				m_graphics->disableShadow();
+			}
+			else
+			{
+				m_character->setShadowUse(2);
+				m_graphics->createShadow(momentum->getShadowX(),
+					momentum->getShadowY(),
+					momentum->getShadowOrientation());
+			}
 		}		
 	}
 	else
@@ -323,6 +352,8 @@ void PhysicsEngine::operateShadow()
 		m_character->setY(m_shadowY);
 		m_character->setXOrientation(m_shadowOrientation);
 		m_character->setShadowUse(0);
+		m_character->getStateMachine()->forceChangeState(JUMP);
+		m_character->setJump(0);
 		m_graphics->disableShadow();
 		break;
 
@@ -344,15 +375,43 @@ Map * PhysicsEngine::getMap()
 void PhysicsEngine::saveMomentum()
 {
 	Momentum * momentum;
-	//Momentum(int yOrientation, int xOrientation, int jump, int x, int y, CHARACTER_STATES state);
 	momentum = new Momentum(m_character->getYOrientation(),
 		m_character->getOrientation(),
 		m_character->getJump(),
 		m_character->getCenter().x - CHARACTER_WIDTH / 2,
 		m_character->getCenter().y - CHARACTER_HEIGHT / 2,
 		m_character->getStateMachine()->getIdCurrentState());
-
+	if (m_character->getShadowUse() == 2)
+	{
+		momentum->setShadowX(m_shadowX);
+		momentum->setShadowY(m_shadowY);
+		momentum->setShadowOrientation(m_shadowOrientation);
+	}
 	//momentum->display();
 
 	m_momentums->push_back(momentum);
+}
+
+void PhysicsEngine::loadNextMap()
+{
+	++m_mapNumber;
+	m_momentums->clear();
+
+	switch (m_mapNumber)
+	{
+	case 2:
+		m_map = new Map("Assets/Maps/map_02.xml");
+		break;
+
+	case 3:
+		m_map = new Map("Assets/Maps/map_03.xml");
+		break;
+
+	default:
+		break;
+	}
+	m_map->loadMap();
+	m_graphics->setMap(m_map);
+	m_graphics->initSprites();
+	setCharacter();
 }

@@ -3,6 +3,7 @@
 
 Momentum::Momentum(int yOrientation, int xOrientation, int jump, int x, int y, CHARACTER_STATES state)
 {
+	m_shadowOrientation = 0;
 	m_yOrientation = yOrientation;
 	m_xOrientation = xOrientation;
 	m_jump = jump;
@@ -13,7 +14,7 @@ Momentum::Momentum(int yOrientation, int xOrientation, int jump, int x, int y, C
 
 Momentum::Momentum()
 {
-
+	m_shadowOrientation = 0;
 }
 
 
@@ -44,6 +45,36 @@ int Momentum::getX()
 int Momentum::getY()
 {
 	return m_y;
+}
+
+int Momentum::getShadowY()
+{
+	return m_shadowY;
+}
+
+int Momentum::getShadowX()
+{
+	return m_shadowX;
+}
+
+int Momentum::getShadowOrientation()
+{
+	return m_shadowOrientation;
+}
+
+void Momentum::setShadowX(int x)
+{
+	m_shadowX = x;
+}
+
+void Momentum::setShadowY(int y)
+{
+	m_shadowY = y;
+}
+
+void Momentum::setShadowOrientation(int orientation)
+{
+	m_shadowOrientation = orientation;
 }
 
 void Momentum::display()

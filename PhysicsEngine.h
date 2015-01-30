@@ -34,6 +34,7 @@ public:
 	void simulate();
 	void operateShadow();
 	void saveMomentum();
+	void loadNextMap();
 
 	Character * getCharacter();
 	Map * getMap();
@@ -42,6 +43,7 @@ protected:
 	int m_shadowX;
 	int m_shadowY;
 	int m_shadowOrientation;
+	int m_mapNumber;
 	RenderWindow * m_window;
 	GraphicsEngine * m_graphics;
 	Map * m_map;

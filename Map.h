@@ -11,7 +11,7 @@ using namespace pugi;
 class Map
 {
 public:
-	Map(char_t * path = "Assets/Maps/maps.xml");
+	Map(char_t * path);
 	~Map();
 
 	Tile * getTile(int x, int y);

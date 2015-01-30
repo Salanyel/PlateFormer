@@ -34,3 +34,11 @@ bool Tile::isSolid()
 		return false;
 	}
 }
+
+bool Tile::isNextLevel()
+{
+	if (m_type == T_NEXTLEVEL)
+		return true;
+	else
+		return false;
+}

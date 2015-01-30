@@ -15,7 +15,6 @@ Tile * Map::getTile(int x, int y)
 {
 
 	int yPlace = y * m_mapWidth;
-	//cout << "X : " << x << " / Y : " << y << " // yPlace : " << y * m_mapHeight<< " // Place : " << yPlace + x << endl;
 
 	return m_tiles.at(x + yPlace);
 }
@@ -59,6 +58,7 @@ bool Map::loadMap()
 
 	map = doc.child("Maps");
 	map = map.child("Map");
+	m_tiles.clear();
 
 	for (xml_node tool = map.first_child(); tool; tool = tool.next_sibling())
 	{	
@@ -94,6 +94,11 @@ bool Map::loadMap()
 
 				case 3:
 					tile->setType(T_SPAWN);
+					m_tiles.push_back(tile);
+					break;
+
+				case 4:
+					tile->setType(T_NEXTLEVEL);
 					m_tiles.push_back(tile);
 					break;
 				}		

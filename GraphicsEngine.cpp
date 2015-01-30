@@ -188,6 +188,9 @@ void GraphicsEngine::initTexts()
 
 void GraphicsEngine::initSprites()
 {
+	m_sprites.clear();
+	m_mapSprites.clear();
+
 	switch (m_currentState)
 	{
 	case GRAPHIC_STATES::MENU_GRAPHICS:
@@ -225,11 +228,13 @@ void GraphicsEngine::initSprites()
 		m_characterSprites->setTextureRect(IntRect(28, 34, 83, 141));
 
 		for (it = 0; it < m_map->getTileNumber(); ++it)
-		{
-			if (it == 63)
-				cout << "temp" << endl;
+		{			
 			sprite = new Sprite();
 			sprite->setTexture(m_textures.at(1));			
+
+			if (it == 55)
+				cout << endl;
+
 			type = m_map->getTile(it)->getType();
 
 			switch (type)
@@ -255,6 +260,10 @@ void GraphicsEngine::initSprites()
 				m_view.setCenter(64 * (it%mapWidth) + 32, 64 * (it / mapWidth) + 32);
 				m_view.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 				m_window->setView(m_view);
+				break;
+
+			case T_NEXTLEVEL:
+				sprite->setTextureRect(IntRect(193, 0, 64, 64));
 				break;
 
 			default:
