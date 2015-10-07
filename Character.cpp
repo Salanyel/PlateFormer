@@ -170,7 +170,7 @@ void Character::processEvents(Event event)
 		m_shadowUse = 1;
 	}
 
-	if (((event.type == Event::KeyPressed && event.key.code == Keyboard::LBracket) || (m_state.Gamepad.wButtons & XINPUT_GAMEPAD_Y)) && m_shadowUse == 2)
+	if (((event.type == Event::KeyPressed && event.key.code == Keyboard::Space) || (m_state.Gamepad.wButtons & XINPUT_GAMEPAD_Y)) && m_shadowUse == 2)
 	{
 		m_shadowUse = 3;
 	}
